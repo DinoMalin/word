@@ -4,25 +4,18 @@ mots=("angle" "armoire" "banc" "bureau" "cabinet" "carreau" "chaise" "classe" "c
 
 
   
+  # choisir un mot aléatoire
+  mot=${mots[$RANDOM % ${#mots[@]}]}
 
-  # séparer le message
+  # séparer le message en deux parties
   IFS=" " read -r -a arr <<< "$*"
-
-  # collecter les indices des mots > 3 lettres
-  candidates=()
+  milieu=$(( ${#arr[@]} / 2 ))
+  message=""
   for i in "${!arr[@]}"; do
-    if [ ${#arr[$i]} -gt 3 ]; then
-      candidates+=($i)
+    if [ "$i" -eq "$milieu" ]; then
+      message="$message $mot"
     fi
+    message="$message ${arr[$i]}"
   done
-
-  # choisir un indice au hasard
-  if [ ${#candidates[@]} -gt 0 ]; then
-    idx=${candidates[$RANDOM % ${#candidates[@]}]}
-    arr[$idx]=$mot
-  fi
-
-  # reconstruire le message
-  message="${arr[*]}"
 
   git commit -m "$message"
